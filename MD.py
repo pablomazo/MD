@@ -119,10 +119,11 @@ for itraj in range(ntrajs):
     print('Starting trajectory: {}'.format(itraj))
 
     # Select random seed:
-    if random_init_cond = False:
-        iseed = itraj
-    else:
+    if random_init_cond:
         iseed = np.random.randint(0, high=n_init_cond)
+    else:
+        iseed = itraj
+
     init_cond = all_init_cond[iseed]
 
     print('Using initial conditions: {}'.format(iseed))
