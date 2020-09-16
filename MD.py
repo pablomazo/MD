@@ -4,7 +4,7 @@ import numpy as np
 import input_file
 
 def initial_setting():
-    global nat, ntrajs, mass, tfin, tstep, atoms
+    global nat, ntrajs, mass, tfin, tstep, atoms, random_init_cond
     global convl, au2cm
     convm = .182288853E4
     convl = .52917726E0
