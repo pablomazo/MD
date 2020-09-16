@@ -6,5 +6,6 @@ input_file={
         'mass' : [12e0, 15e0, 1e0, 1e0],
         'tfin' : 100,
         'tstep' : 0.1,
-        'atoms' : ['C', 'O', 'H', 'H']
+        'atoms' : ['C', 'O', 'H', 'H'],
+		'random_init_cond' : True,
         }

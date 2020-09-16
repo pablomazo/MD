@@ -24,6 +24,8 @@ def initial_setting():
     tfin = inp['tfin'] / au2fs
     tstep = inp['tstep'] / au2fs
 
+    random_init_cond = inp['random_init_cond']
+
     for i in range(nat):
         mass[3*i] = inp['mass'][i] * convm
         mass[3*i+1] = mass[3*i]
@@ -117,7 +119,10 @@ for itraj in range(ntrajs):
     print('Starting trajectory: {}'.format(itraj))
 
     # Select random seed:
-    iseed = np.random.randint(0, high=n_init_cond)
+    if random_init_cond = False:
+        iseed = itraj
+    else:
+        iseed = np.random.randint(0, high=n_init_cond)
     init_cond = all_init_cond[iseed]
 
     print('Using initial conditions: {}'.format(iseed))
