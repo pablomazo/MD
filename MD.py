@@ -2,7 +2,6 @@ import os
 import pes
 import numpy as np
 import input_file
-from scipy.integrate import solve_ivp
 
 def initial_setting():
     global nat, ntrajs, mass, tfin, tstep, atoms
