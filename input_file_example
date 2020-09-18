@@ -9,3 +9,10 @@ input_file={
         'atoms' : ['C', 'O', 'H', 'H'],
 		'random_init_cond' : True,
         }
+
+def check_end(t, XP):
+	'''
+	Function to decide whether a trayectory ended or not.
+	'''
+	end = False
+	return end

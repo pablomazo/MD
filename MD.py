@@ -3,6 +3,7 @@ import os
 import pes
 import numpy as np
 import input_file
+from input_file import check_end
 
 def initial_setting():
     global nat, ntrajs, mass, tfin, tstep, atoms, random_init_cond
@@ -94,16 +95,18 @@ def propagate(itraj, init_cond, tf, ts):
     XP = init_cond
     it = 0
     traj_name = 'traj_{}.xyz'.format(itraj)
+    end = False
 
     # Remove file to save xyz trayectory if it already exists.
     if os.path.exists(traj_name):  os.remove(traj_name)
 
     print('Initial energy / cm-1: {}'.format(total_ener(XP)*au2cm))
-    while t <= tf:
+    while t <= tf and not end:
         tin = t
         tout = t + ts
 
         XP = leap_frog(XP, ts)
+        end = check_end(t, XP)
 
         t = tout
 
