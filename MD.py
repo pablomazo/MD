@@ -1,3 +1,4 @@
+import sys
 import os
 import pes
 import numpy as np
@@ -33,6 +34,9 @@ def initial_setting():
 
     # Read initial conditions.
     init_cond = load_initial_cond(inp['initial_cond'])
+
+    # If file were final conditions are stored exist, exit program:
+    if os.path.exists('end-conditions'): sys.exit("Please remove 'end-conditions' file.")
     return init_cond
 
 def load_initial_cond(file):
@@ -107,8 +111,11 @@ def propagate(itraj, init_cond, tf, ts):
             print_geometry(XP, traj_name)
 
         it += 1
+
+    print_geometry(XP, traj_name)
     print('Final energy / cm-1: {}'.format(total_ener(XP)*au2cm))
     print('------------------------------------------------------')
+    return t, XP
 
 # Initial settings
 all_init_cond = initial_setting()
@@ -129,4 +136,10 @@ for itraj in range(ntrajs):
     print('Using initial conditions: {}'.format(iseed))
 
     # Start propagation:
-    propagate(itraj, init_cond, tfin, tstep)
+    t, XP = propagate(itraj, init_cond, tfin, tstep)
+
+    with open('end-conditions', 'a') as f:
+        f.write('{} {}'.format(itraj, t))
+        f.writelines(' ' + str(elem) for elem in init_cond.tolist())
+        f.writelines(' ' + str(elem) for elem in XP.tolist())
+        f.write('\n')
