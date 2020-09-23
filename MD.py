@@ -6,7 +6,8 @@ import input_file
 from input_file import check_end
 
 def initial_setting():
-    global nat, ntrajs, mass, tfin, tstep, atoms, random_init_cond
+    global nat, mintraj, maxtraj, mass, tfin, tstep, atoms, random_init_cond
+    global it_print
     global convl, au2cm
     convm = .182288853E4
     convl = .52917726E0
@@ -18,7 +19,8 @@ def initial_setting():
 
     inp = input_file.input_file
     nat = inp['nat']
-    ntrajs = inp['ntrajs']
+    mintraj = inp['mintraj']
+    maxtraj = inp['maxtraj']
     mass = np.zeros(3*nat)
 
     atoms = inp['atoms']
@@ -26,6 +28,7 @@ def initial_setting():
     tfin = inp['tfin'] / au2fs
     tstep = inp['tstep'] / au2fs
 
+    it_print = inp['it_print']
     random_init_cond = inp['random_init_cond']
 
     for i in range(nat):
@@ -38,6 +41,7 @@ def initial_setting():
 
     # If file were final conditions are stored exist, exit program:
     if os.path.exists('end-conditions'): sys.exit("Please remove 'end-conditions' file.")
+
     return init_cond
 
 def load_initial_cond(file):
@@ -110,7 +114,7 @@ def propagate(itraj, init_cond, tf, ts):
 
         t = tout
 
-        if it % 10 == 0:
+        if it % it_print == 0:
             print_geometry(XP, traj_name)
 
         it += 1
@@ -120,13 +124,13 @@ def propagate(itraj, init_cond, tf, ts):
     print('------------------------------------------------------')
     return t, XP
 
-# Initial settings
-all_init_cond = initial_setting()
-n_init_cond = all_init_cond.shape[0]
-
-# Run ntrajs propagations:
-for itraj in range(ntrajs):
-    print('Starting trajectory: {}'.format(itraj))
+def get_init_cond(itraj, skip=False):
+    '''
+    skip is added to avoid perfoming computational costly operations
+    that are not needed when the initial conditions are just being
+    skipped.
+    '''
+    init_cond = None
 
     # Select random seed:
     if random_init_cond:
@@ -134,9 +138,27 @@ for itraj in range(ntrajs):
     else:
         iseed = itraj
 
-    init_cond = all_init_cond[iseed]
+    if not skip:
+        print('Using initial conditions: {}'.format(iseed))
+        init_cond = all_init_cond[iseed]
 
-    print('Using initial conditions: {}'.format(iseed))
+    return init_cond
+
+
+# Initial settings
+global all_init_cond, n_init_cond
+all_init_cond = initial_setting()
+n_init_cond = all_init_cond.shape[0]
+
+# Skip initial conditions if mintraj != 1
+for itraj in range(1, mintraj):
+    _ = get_init_cond(itraj, skip=True)
+
+# Run propagations:
+for itraj in range(mintraj, maxtraj + 1):
+    print('Starting trajectory: {}'.format(itraj))
+
+    init_cond = get_init_cond(itraj)
 
     # Start propagation:
     t, XP = propagate(itraj, init_cond, tfin, tstep)

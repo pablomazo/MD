@@ -1,11 +1,13 @@
 # This file should be renamed as "input_file.py".
 input_file={
         'nat' : 4,
-        'ntrajs' : 1,
+        'mintraj' : 1,
+        'maxtraj' : 10,
         'initial_cond' : 'initial-conditions-A.dat',
         'mass' : [12e0, 15e0, 1e0, 1e0],
         'tfin' : 100,
         'tstep' : 0.1,
+		'it_print' : 10,
         'atoms' : ['C', 'O', 'H', 'H'],
 		'random_init_cond' : True,
         }
