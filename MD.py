@@ -114,12 +114,13 @@ def propagate(itraj, init_cond, tf, ts):
 
         t = tout
 
-        if it % it_print == 0:
+        if it_print and it % it_print == 0:
             print_geometry(XP, traj_name)
 
         it += 1
 
-    print_geometry(XP, traj_name)
+    if it_print:
+        print_geometry(XP, traj_name)
     print('Final energy / cm-1: {}'.format(total_ener(XP)*au2cm))
     print('------------------------------------------------------')
     return t, XP
